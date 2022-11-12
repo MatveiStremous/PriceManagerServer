@@ -8,7 +8,7 @@ public class User implements Serializable {
     private String password;
     private UserRole userRole = UserRole.USER_ROLE;
 
-    enum UserRole {
+    public enum UserRole {
         USER_ROLE,
         ADMIN_ROLE
     }

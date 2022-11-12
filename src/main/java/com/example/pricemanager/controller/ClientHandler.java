@@ -25,6 +25,11 @@ public class ClientHandler implements Runnable{
                     userRepository.addNewUser((User)client.readObject());
                     break;
                 }
+                case LOGIN:{
+                    boolean isUserLogin = userRepository.loginUser((User)client.readObject());
+                    client.writeObject(isUserLogin);
+                    break;
+                }
             }
         }
     }
