@@ -1,6 +1,7 @@
 package com.example.pricemanager;
 
 import com.example.pricemanager.controller.ClientHandler;
+import com.example.pricemanager.repo.CompanyRepository;
 import com.example.pricemanager.repo.UserRepository;
 
 import java.io.IOException;
@@ -12,12 +13,11 @@ public class Server {
         ServerSocket serverSocket = null;
         serverSocket = new ServerSocket(8000);
         System.out.println("Server is ready");
-        UserRepository userRepository = new UserRepository();
         while (true) {
             Socket clientSocket = serverSocket.accept();
             System.out.println(clientSocket);
 
-            new Thread(new ClientHandler(clientSocket, userRepository)).start();
+            new Thread(new ClientHandler(clientSocket)).start();
         }
     }
 }
