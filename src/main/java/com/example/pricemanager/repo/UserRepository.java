@@ -33,12 +33,12 @@ public class UserRepository implements Repository {
         }
     }
 
-    public boolean loginUser(User user) {
+    public int loginUser(User user) {
         User userFromDb = getUserByLogin(user.getLogin());
-        if(userFromDb == null){
-            return false;
+        if(userFromDb == null || !UserRepository.getHashOfPassword(user.getPassword()).equals(userFromDb.getPassword())){
+            return 0;
         }
-        return UserRepository.getHashOfPassword(user.getPassword()).equals(userFromDb.getPassword());
+        return userFromDb.getId();
     }
 
     public static String getHashOfPassword(String password) {

@@ -23,8 +23,11 @@ public class ClientHandler implements Runnable{
             Action action = (Action) client.readObject();
             switch (action){
                 case LOGIN:{
-                    boolean isUserLogin = userRepository.loginUser((User)client.readObject());
-                    client.writeObject(isUserLogin ? Status.SUCCESS : Status.INVALID_PASSWORD);
+                    int id = userRepository.loginUser((User)client.readObject());
+                    client.writeObject(id>0 ? Status.SUCCESS : Status.INVALID_PASSWORD);
+                    if(id>0){
+                        client.writeObject(id);
+                    }
                     break;
                 }
                 case CHECK_ROLE:{
