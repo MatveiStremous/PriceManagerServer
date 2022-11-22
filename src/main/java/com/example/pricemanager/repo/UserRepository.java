@@ -35,6 +35,9 @@ public class UserRepository implements Repository {
 
     public boolean loginUser(User user) {
         User userFromDb = getUserByLogin(user.getLogin());
+        if(userFromDb == null){
+            return false;
+        }
         return UserRepository.getHashOfPassword(user.getPassword()).equals(userFromDb.getPassword());
     }
 
