@@ -26,8 +26,7 @@ public class ProductRepository implements Repository {
         }
 
         Company company = companyRepository.getCompanyById(product.getCompanyId());
-        company.setAmountOfProducts(company.getAmountOfProducts()+1);
-        companyRepository.updateCompany(company);
+        companyRepository.updateAmountOfCompanyProducts(company.getId(), company.getAmountOfProducts() + 1);
     }
 
     public Product getProductById(int id) {
@@ -80,8 +79,7 @@ public class ProductRepository implements Repository {
     public void deleteProductById(int id) {
         Product product = getProductById(id);
         Company company = companyRepository.getCompanyById(product.getCompanyId());
-        company.setAmountOfProducts(company.getAmountOfProducts()-1);
-        companyRepository.updateCompany(company);
+        companyRepository.updateAmountOfCompanyProducts(company.getId(), company.getAmountOfProducts() - 1);
 
         String sql = "DELETE FROM product " +
                 "WHERE product_id = " + id;

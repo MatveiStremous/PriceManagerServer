@@ -106,7 +106,8 @@ public class CompanyRepository implements Repository {
     }
 
     public boolean updateCompany(Company company) {
-        if (getCompanyByName(company.getName()) == null) {
+        Company companyFromDb = getCompanyByName(company.getName());
+        if (companyFromDb == null || companyFromDb.getId() == company.getId()) {
             String sqlRequest = "UPDATE company SET" +
                     " name = ?," +
                     " balance = ?," +
@@ -127,5 +128,21 @@ public class CompanyRepository implements Repository {
             return true;
         }
         return false;
+    }
+
+    public void updateAmountOfCompanyProducts(int company_id, int amount) {
+        String sqlRequest = "UPDATE company SET" +
+                " amount_of_products = ?" +
+                " WHERE company_id = ?";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(sqlRequest);
+            statement.setInt(1, amount);
+            statement.setInt(2, company_id);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
