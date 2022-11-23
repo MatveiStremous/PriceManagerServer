@@ -32,7 +32,7 @@ public class CompanyRepository implements Repository {
         try {
             Statement statement = connection.createStatement();
             String sql = "SELECT * FROM company " +
-                    "WHERE id = " + id;
+                    "WHERE company_id = " + id;
             ResultSet rs = statement.executeQuery(sql);
             if (rs.next()) {
                 Company companyFromDb = new Company();
@@ -53,7 +53,7 @@ public class CompanyRepository implements Repository {
         try {
             Statement statement = connection.createStatement();
             String sql = "SELECT * FROM company " +
-                    "WHERE name = \'" + name + "\'";
+                    "WHERE name = '" + name + "'";
             ResultSet rs = statement.executeQuery(sql);
             if (rs.next()) {
                 Company companyFromDb = new Company();

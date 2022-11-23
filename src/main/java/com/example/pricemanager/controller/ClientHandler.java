@@ -2,10 +2,12 @@ package com.example.pricemanager.controller;
 
 import com.example.pricemanager.connection.Client;
 import com.example.pricemanager.entity.Company;
+import com.example.pricemanager.entity.Product;
 import com.example.pricemanager.entity.User;
 import com.example.pricemanager.message.Action;
 import com.example.pricemanager.message.Status;
 import com.example.pricemanager.repo.CompanyRepository;
+import com.example.pricemanager.repo.ProductRepository;
 import com.example.pricemanager.repo.UserRepository;
 
 import java.net.Socket;
@@ -14,6 +16,7 @@ public class ClientHandler implements Runnable{
     private final Client client;
     private static UserRepository userRepository = new UserRepository();
     private static CompanyRepository companyRepository = new CompanyRepository();
+    private static ProductRepository productRepository = new ProductRepository();
     public ClientHandler(Socket clientSocket) {
         client = new Client(clientSocket);
     }
@@ -59,6 +62,22 @@ public class ClientHandler implements Runnable{
                 }
                 case UPDATE_COMPANY:{
                     client.writeObject(companyRepository.updateCompany((Company) client.readObject()) ? Status.SUCCESS : Status.COMPANY_ALREADY_EXISTS);
+                    break;
+                }
+                case ADD_NEW_PRODUCT:{
+                    productRepository.addNewProduct((Product)client.readObject());
+                    break;
+                }
+                case DELETE_PRODUCT:{
+                    productRepository.deleteProductById((Integer)client.readObject());
+                    break;
+                }
+                case GET_ALL_COMPANY_PRODUCTS:{
+                    client.writeObject(productRepository.getProductsByCompanyId((Integer)client.readObject()));
+                    break;
+                }
+                case UPDATE_PRODUCT:{
+                    productRepository.updateProduct((Product) client.readObject());
                     break;
                 }
             }

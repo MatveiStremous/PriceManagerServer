@@ -57,7 +57,7 @@ public class UserRepository implements Repository {
         try {
             Statement statement = connection.createStatement();
             String sql = "SELECT * FROM user " +
-                    "WHERE login = \'" + login + "\'";
+                    "WHERE login = '" + login + "'";
             ResultSet rs = statement.executeQuery(sql);
             if (rs.next()) {
                 User userFromDb = new User();
