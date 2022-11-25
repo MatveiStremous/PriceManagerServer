@@ -2,6 +2,7 @@ package com.example.pricemanager.repo;
 
 import com.example.pricemanager.entity.Company;
 import com.example.pricemanager.entity.Product;
+import com.example.pricemanager.entity.Production;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductRepository implements Repository {
-    private final CompanyRepository companyRepository = new CompanyRepository();
+    private static final CompanyRepository companyRepository = new CompanyRepository();
+    private static final ProductionRepository productionRepository = new ProductionRepository();
 
     public void addNewProduct(Product product) {
         String sqlRequest = "INSERT INTO product (name, company_id) " +
@@ -111,5 +113,19 @@ public class ProductRepository implements Repository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public float calcAverageCostByProductId(int product_id) {
+        List<Production> productions = productionRepository.getProductionsByProductId(product_id);
+        float sum = 0;
+        int amount = 0;
+        for(int i = 0; i<productions.size();i++){
+            sum+=productions.get(i).getTotalCosts();
+            amount+=productions.get(i).getAmount();
+        }
+        if(amount == 0){
+            return 0;
+        }
+        return sum/amount;
     }
 }
