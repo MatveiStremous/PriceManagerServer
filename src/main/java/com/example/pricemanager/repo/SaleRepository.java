@@ -3,6 +3,7 @@ package com.example.pricemanager.repo;
 import com.example.pricemanager.entity.Company;
 import com.example.pricemanager.entity.Product;
 import com.example.pricemanager.entity.Sale;
+import com.example.pricemanager.message.Status;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +13,11 @@ public class SaleRepository implements Repository{
     private static final CompanyRepository companyRepository = new CompanyRepository();
     private static final ProductRepository productRepository = new ProductRepository();
 
-    public void addNewSale(Sale sale) {
+    public Status addNewSale(Sale sale) {
+        Product product = productRepository.getProductById(sale.getProductId());
+        if(product.getAmount()-sale.getAmount()<0){
+            return Status.NOT_ENOUGH_PRODUCTS;
+        }
         String sqlRequest = "INSERT INTO sale (amount, total_price, date, product_id) " +
                 "VALUES(?, ?, ?, ?)";
         try {
@@ -27,25 +32,19 @@ public class SaleRepository implements Repository{
             throw new RuntimeException(e);
         }
 
-        Product product = productRepository.getProductById(sale.getProductId());
+
         product.setAmount(product.getAmount() - sale.getAmount());
         product.setAverageSellingPrice(productRepository.calcAverageSellingPriceByProductId(sale.getProductId()));
         productRepository.updateProduct(product);
         Company company = companyRepository.getCompanyById(product.getCompanyId());
         company.setBalance(company.getBalance() + sale.getTotalPrice());
         companyRepository.updateCompany(company);
+        return Status.SUCCESS;
     }
 
 
     public void deleteSaleById(Integer id) {
         Sale sale = getSaleById(id);
-        Product product = productRepository.getProductById(sale.getProductId());
-        product.setAmount(product.getAmount() + sale.getAmount());
-        product.setAverageSellingPrice(productRepository.calcAverageSellingPriceByProductId(sale.getProductId()));
-        productRepository.updateProduct(product);
-        Company company = companyRepository.getCompanyById(product.getCompanyId());
-        company.setBalance(company.getBalance() - sale.getTotalPrice());
-        companyRepository.updateCompany(company);
 
         String sql = "DELETE FROM sale " +
                 "WHERE sale_id = " + id;
@@ -55,18 +54,23 @@ public class SaleRepository implements Repository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
 
-    public void updateSale(Sale sale) {
-        Sale oldSale = getSaleById(sale.getId());
         Product product = productRepository.getProductById(sale.getProductId());
-        product.setAmount(product.getAmount() + oldSale.getAmount() - sale.getAmount());
+        product.setAmount(product.getAmount() + sale.getAmount());
         product.setAverageSellingPrice(productRepository.calcAverageSellingPriceByProductId(sale.getProductId()));
         productRepository.updateProduct(product);
-
         Company company = companyRepository.getCompanyById(product.getCompanyId());
-        company.setBalance(company.getBalance() + oldSale.getTotalPrice() - sale.getTotalPrice());
+        company.setBalance(company.getBalance() - sale.getTotalPrice());
         companyRepository.updateCompany(company);
+    }
+
+    public Status updateSale(Sale sale) {
+        Sale oldSale = getSaleById(sale.getId());
+        Product product = productRepository.getProductById(sale.getProductId());
+
+        if(product.getAmount() + oldSale.getAmount() - sale.getAmount() < 0){
+            return Status.NOT_ENOUGH_PRODUCTS;
+        }
 
         String sqlRequest = "UPDATE sale SET" +
                 " amount = ?," +
@@ -85,6 +89,16 @@ public class SaleRepository implements Repository{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
+
+        product.setAmount(product.getAmount() + oldSale.getAmount() - sale.getAmount());
+        product.setAverageSellingPrice(productRepository.calcAverageSellingPriceByProductId(sale.getProductId()));
+        productRepository.updateProduct(product);
+
+        Company company = companyRepository.getCompanyById(product.getCompanyId());
+        company.setBalance(company.getBalance() - oldSale.getTotalPrice() + sale.getTotalPrice());
+        companyRepository.updateCompany(company);
+        return Status.SUCCESS;
     }
 
     public List<Sale> getSalesByProductId(int productId) {

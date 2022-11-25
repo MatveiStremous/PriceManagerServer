@@ -84,7 +84,7 @@ public class ClientHandler implements Runnable {
                     break;
                 }
                 case DELETE_PRODUCTION: {
-                    productionRepository.deleteProductionById((Integer) client.readObject());
+                    client.writeObject(productionRepository.deleteProductionById((Integer) client.readObject()));
                     break;
                 }
                 case GET_ALL_PRODUCT_PRODUCTIONS: {
@@ -92,11 +92,11 @@ public class ClientHandler implements Runnable {
                     break;
                 }
                 case UPDATE_PRODUCTION: {
-                    productionRepository.updateProduction((Production) client.readObject());
+                    client.writeObject(productionRepository.updateProduction((Production) client.readObject()));
                     break;
                 }
                 case ADD_NEW_SALE: {
-                    saleRepository.addNewSale((Sale) client.readObject());
+                    client.writeObject(saleRepository.addNewSale((Sale) client.readObject()));
                     break;
                 }
                 case DELETE_SALE: {
@@ -108,9 +108,8 @@ public class ClientHandler implements Runnable {
                     break;
                 }
                 case UPDATE_SALE: {
-                    saleRepository.updateSale((Sale) client.readObject());
+                    client.writeObject(saleRepository.updateSale((Sale) client.readObject()));
                     break;
-
                 }
             }
         }
