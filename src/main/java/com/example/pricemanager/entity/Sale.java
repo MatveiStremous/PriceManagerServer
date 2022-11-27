@@ -6,14 +6,14 @@ import java.time.LocalDate;
 public class Sale implements Serializable {
     private int id;
     private int amount;
-    private float totalPrice;
+    private double totalPrice;
     private LocalDate date;
     private int productId;
 
     public Sale() {
     }
 
-    public Sale(int id, int amount, float totalPrice, LocalDate date, int productId) {
+    public Sale(int id, int amount, double totalPrice, LocalDate date, int productId) {
         this.id = id;
         this.amount = amount;
         this.totalPrice = totalPrice;
@@ -21,7 +21,7 @@ public class Sale implements Serializable {
         this.productId = productId;
     }
 
-    public Sale(int amount, float totalPrice, LocalDate date, int productId) {
+    public Sale(int amount, double totalPrice, LocalDate date, int productId) {
         this.amount = amount;
         this.totalPrice = totalPrice;
         this.date = date;
@@ -44,11 +44,11 @@ public class Sale implements Serializable {
         this.amount = amount;
     }
 
-    public float getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(float totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 

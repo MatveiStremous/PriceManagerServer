@@ -107,8 +107,8 @@ public class ProductRepository implements Repository {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setString(1, product.getName());
             statement.setInt(2, product.getAmount());
-            statement.setFloat(3, product.getAverageCost());
-            statement.setFloat(4, product.getAverageSellingPrice());
+            statement.setDouble(3, product.getAverageCost());
+            statement.setDouble(4, product.getAverageSellingPrice());
             statement.setInt(5, product.getId());
 
             statement.executeUpdate();

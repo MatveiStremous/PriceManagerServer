@@ -5,21 +5,21 @@ import java.io.Serializable;
 public class Company implements Serializable {
     private int id;
     private String name;
-    private float balance;
+    private double balance;
     private int amountOfProducts;
     private int userId;
 
     public Company() {
     }
 
-    public Company(int id, String name, float balance, int userId) {
+    public Company(int id, String name, double balance, int userId) {
         this.id = id;
         this.name = name;
         this.balance = balance;
         this.userId = userId;
     }
 
-    public Company(String name, float balance, int userId) {
+    public Company(String name, double balance, int userId) {
         this.name = name;
         this.balance = balance;
         this.userId = userId;
@@ -57,11 +57,11 @@ public class Company implements Serializable {
         this.name = name;
     }
 
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 }

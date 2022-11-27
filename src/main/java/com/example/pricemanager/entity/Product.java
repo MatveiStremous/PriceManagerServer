@@ -6,11 +6,11 @@ public class Product implements Serializable {
     private int id;
     private String name;
     private int amount;
-    private float averageCost;
-    private float averageSellingPrice;
+    private double averageCost;
+    private double averageSellingPrice;
     private int companyId;
 
-    public Product(String name, int amount, float averageCost, float averageSellingPrice, int companyId) {
+    public Product(String name, int amount, double averageCost, double averageSellingPrice, int companyId) {
         this.name = name;
         this.amount = amount;
         this.averageCost = averageCost;
@@ -51,19 +51,19 @@ public class Product implements Serializable {
         this.amount = amount;
     }
 
-    public float getAverageCost() {
+    public double getAverageCost() {
         return averageCost;
     }
 
-    public void setAverageCost(float averageCost) {
+    public void setAverageCost(double averageCost) {
         this.averageCost = averageCost;
     }
 
-    public float getAverageSellingPrice() {
+    public double getAverageSellingPrice() {
         return averageSellingPrice;
     }
 
-    public void setAverageSellingPrice(float averageSellingPrice) {
+    public void setAverageSellingPrice(double averageSellingPrice) {
         this.averageSellingPrice = averageSellingPrice;
     }
 

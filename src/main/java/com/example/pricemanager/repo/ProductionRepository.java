@@ -19,7 +19,7 @@ public class ProductionRepository implements Repository {
         try {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setInt(1, production.getAmount());
-            statement.setFloat(2, production.getTotalCosts());
+            statement.setDouble(2, production.getTotalCosts());
             statement.setDate(3, Date.valueOf(production.getDate()));
             statement.setInt(4, production.getProductId());
 
@@ -79,7 +79,7 @@ public class ProductionRepository implements Repository {
         try {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setInt(1, production.getAmount());
-            statement.setFloat(2, production.getTotalCosts());
+            statement.setDouble(2, production.getTotalCosts());
             statement.setDate(3, Date.valueOf(production.getDate()));
             statement.setInt(4, production.getId());
 
@@ -111,7 +111,7 @@ public class ProductionRepository implements Repository {
                 productionFromDb.setAmount(rs.getInt("amount"));
                 productionFromDb.setDate(rs.getDate("date").toLocalDate());
                 productionFromDb.setProductId(rs.getInt("product_id"));
-                productionFromDb.setTotalCosts(rs.getFloat("total_costs"));
+                productionFromDb.setTotalCosts(rs.getDouble("total_costs"));
                 productions.add(productionFromDb);
             }
         } catch (SQLException e) {
@@ -133,7 +133,7 @@ public class ProductionRepository implements Repository {
                 productionFromDb.setAmount(rs.getInt("amount"));
                 productionFromDb.setDate(rs.getDate("date").toLocalDate());
                 productionFromDb.setProductId(rs.getInt("product_id"));
-                productionFromDb.setTotalCosts(rs.getFloat("total_costs"));
+                productionFromDb.setTotalCosts(rs.getDouble("total_costs"));
                 return productionFromDb;
             }
         } catch (SQLException e) {

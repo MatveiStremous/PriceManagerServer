@@ -6,18 +6,18 @@ import java.time.LocalDate;
 public class Production implements Serializable {
     private int id;
     private int amount;
-    private float totalCosts;
+    private double totalCosts;
     private LocalDate date;
     private int productId;
 
-    public Production(int id, float totalCosts, LocalDate date, int productId) {
+    public Production(int id, double totalCosts, LocalDate date, int productId) {
         this.id = id;
         this.totalCosts = totalCosts;
         this.date = date;
         this.productId = productId;
     }
 
-    public Production(int id, int amount, float totalCosts, LocalDate date, int productId) {
+    public Production(int id, int amount, double totalCosts, LocalDate date, int productId) {
         this.id = id;
         this.amount = amount;
         this.totalCosts = totalCosts;
@@ -44,11 +44,11 @@ public class Production implements Serializable {
         this.amount = amount;
     }
 
-    public float getTotalCosts() {
+    public double getTotalCosts() {
         return totalCosts;
     }
 
-    public void setTotalCosts(float totalCosts) {
+    public void setTotalCosts(double totalCosts) {
         this.totalCosts = totalCosts;
     }
 

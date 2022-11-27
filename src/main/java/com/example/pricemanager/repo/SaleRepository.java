@@ -23,7 +23,7 @@ public class SaleRepository implements Repository{
         try {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setInt(1, sale.getAmount());
-            statement.setFloat(2, sale.getTotalPrice());
+            statement.setDouble(2, sale.getTotalPrice());
             statement.setDate(3, Date.valueOf(sale.getDate()));
             statement.setInt(4, sale.getProductId());
 
@@ -81,7 +81,7 @@ public class SaleRepository implements Repository{
         try {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setInt(1, sale.getAmount());
-            statement.setFloat(2, sale.getTotalPrice());
+            statement.setDouble(2, sale.getTotalPrice());
             statement.setDate(3, Date.valueOf(sale.getDate()));
             statement.setInt(4, sale.getId());
 

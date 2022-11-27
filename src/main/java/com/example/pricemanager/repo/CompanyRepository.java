@@ -17,7 +17,7 @@ public class CompanyRepository implements Repository {
             try {
                 PreparedStatement statement = connection.prepareStatement(sqlRequest);
                 statement.setString(1, company.getName());
-                statement.setFloat(2, company.getBalance());
+                statement.setDouble(2, company.getBalance());
                 statement.setInt(3, company.getUserId());
                 statement.executeUpdate();
             } catch (SQLException e) {
@@ -117,7 +117,7 @@ public class CompanyRepository implements Repository {
             try {
                 PreparedStatement statement = connection.prepareStatement(sqlRequest);
                 statement.setString(1, company.getName());
-                statement.setFloat(2, company.getBalance());
+                statement.setDouble(2, company.getBalance());
                 statement.setInt(3, company.getAmountOfProducts());
                 statement.setInt(4, company.getId());
 
