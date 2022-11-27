@@ -1,8 +1,6 @@
 package com.example.pricemanager;
 
 import com.example.pricemanager.controller.ClientHandler;
-import com.example.pricemanager.repo.CompanyRepository;
-import com.example.pricemanager.repo.UserRepository;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -12,10 +10,10 @@ public class Server {
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
         serverSocket = new ServerSocket(8000);
-        System.out.println("Server is ready");
+        System.out.println("Server is ready. Port: " + serverSocket.getLocalPort() + ".");
         while (true) {
             Socket clientSocket = serverSocket.accept();
-            System.out.println(clientSocket);
+            System.out.println("New connected client. IP: " + clientSocket.getInetAddress() + ". Port: " + clientSocket.getPort()+".");
 
             new Thread(new ClientHandler(clientSocket)).start();
         }
