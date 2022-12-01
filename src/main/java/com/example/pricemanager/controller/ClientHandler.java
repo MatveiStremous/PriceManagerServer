@@ -15,6 +15,7 @@ public class ClientHandler implements Runnable {
     private static ProductRepository productRepository = new ProductRepository();
     private static ProductionRepository productionRepository = new ProductionRepository();
     private static SaleRepository saleRepository = new SaleRepository();
+    private static PriceCalculationRepository priceCalculationRepository = new PriceCalculationRepository();
 
     public ClientHandler(Socket clientSocket) {
         client = new Client(clientSocket);
@@ -109,6 +110,18 @@ public class ClientHandler implements Runnable {
                 }
                 case UPDATE_SALE: {
                     client.writeObject(saleRepository.updateSale((Sale) client.readObject()));
+                    break;
+                }
+                case GET_ALL_USER_PRICE_CALCULATIONS:{
+                    client.writeObject(priceCalculationRepository.getCalculationsByUserId((Integer) client.readObject()));
+                    break;
+                }
+                case ADD_NEW_PRICE_CALCULATION: {
+                    client.writeObject(priceCalculationRepository.addNewCalculation((PriceCalculation) client.readObject()));
+                    break;
+                }
+                case DELETE_ALL_USER_PRICE_CALCULATIONS:{
+                    priceCalculationRepository.deleteAllCalculationsByUserId((Integer) client.readObject());
                     break;
                 }
             }
