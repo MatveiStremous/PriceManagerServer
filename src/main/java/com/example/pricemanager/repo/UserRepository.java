@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 
 public class UserRepository implements Repository {
-    public static boolean addNewUser(User user) {
+    public boolean addNewUser(User user) {
         if (getUserByLogin(user.getLogin()) == null) {
             String sqlRequest = "INSERT INTO user (login, password, role, status) " +
                     "VALUES(?, ?, ?, ?)";
@@ -30,7 +30,7 @@ public class UserRepository implements Repository {
         }
     }
 
-    public static User getUserByLogin(String login) {
+    public User getUserByLogin(String login) {
         try {
             Statement statement = connection.createStatement();
             String sql = "SELECT * FROM user " +

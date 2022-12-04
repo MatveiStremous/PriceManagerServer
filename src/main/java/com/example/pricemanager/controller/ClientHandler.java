@@ -3,23 +3,30 @@ package com.example.pricemanager.controller;
 import com.example.pricemanager.connection.Client;
 import com.example.pricemanager.entity.*;
 import com.example.pricemanager.message.Action;
-import com.example.pricemanager.message.Status;
-import com.example.pricemanager.repo.*;
-import com.example.pricemanager.service.UserService;
+import com.example.pricemanager.repo.CostCalculationRepository;
+import com.example.pricemanager.service.*;
 
 import java.net.Socket;
 
 public class ClientHandler implements Runnable {
     private final Client client;
-    private static UserRepository userRepository = new UserRepository();
-    private static CompanyRepository companyRepository = new CompanyRepository();
-    private static ProductRepository productRepository = new ProductRepository();
-    private static ProductionRepository productionRepository = new ProductionRepository();
-    private static SaleRepository saleRepository = new SaleRepository();
-    private static PriceCalculationRepository priceCalculationRepository = new PriceCalculationRepository();
-    private static CostCalculationRepository costCalculationRepository = new CostCalculationRepository();
+    private final UserService userService;
+    private final CompanyService companyService;
+    private final ProductService productService;
+    private final ProductionService productionService;
+    private final SaleService saleService;
+    private final PriceCalculationService priceCalculationService;
+    private final CostCalculationService costCalculationService;
+
     public ClientHandler(Socket clientSocket) {
         client = new Client(clientSocket);
+        userService = new UserService();
+        companyService = new CompanyService();
+        productService = new ProductService();
+        productionService = new ProductionService();
+        saleService = new SaleService();
+        priceCalculationService = new PriceCalculationService();
+        costCalculationService = new CostCalculationService();
     }
 
     @Override
@@ -29,15 +36,15 @@ public class ClientHandler implements Runnable {
             Action action = (Action) client.readObject();
             switch (action) {
                 case LOGIN: {
-                    client.writeObject(UserService.loginUser((User) client.readObject()));
+                    client.writeObject(userService.loginUser((User) client.readObject()));
                     break;
                 }
-                case GET_USER_INFO:{
-                    client.writeObject(UserService.getUserInfoByInfo((String) client.readObject()));
+                case GET_USER_INFO: {
+                    client.writeObject(userService.getUserInfoByInfo((String) client.readObject()));
                     break;
                 }
                 case REGISTRATION: {
-                    client.writeObject(userRepository.addNewUser((User) client.readObject()) ? Status.SUCCESS : Status.LOGIN_ALREADY_EXISTS);
+                    client.writeObject(userService.registerNewUser((User) client.readObject()));
                     break;
                 }
                 case EXIT: {
@@ -46,91 +53,91 @@ public class ClientHandler implements Runnable {
                     break;
                 }
                 case ADD_NEW_COMPANY: {
-                    client.writeObject(companyRepository.addNewCompany((Company) client.readObject()) ? Status.SUCCESS : Status.COMPANY_ALREADY_EXISTS);
+                    client.writeObject(companyService.createNewCompany((Company) client.readObject()));
                     break;
                 }
                 case GET_ALL_USER_COMPANIES: {
-                    client.writeObject(companyRepository.getCompaniesByUserId((Integer) client.readObject()));
+                    client.writeObject(companyService.getAllUserCompanies((Integer) client.readObject()));
                     break;
                 }
                 case DELETE_COMPANY: {
-                    companyRepository.deleteCompanyById((Integer) client.readObject());
+                    companyService.deleteCompanyById((Integer) client.readObject());
                     break;
                 }
                 case UPDATE_COMPANY: {
-                    client.writeObject(companyRepository.updateCompany((Company) client.readObject()) ? Status.SUCCESS : Status.COMPANY_ALREADY_EXISTS);
+                    client.writeObject(companyService.updateCompany((Company) client.readObject()));
                     break;
                 }
                 case ADD_NEW_PRODUCT: {
-                    productRepository.addNewProduct((Product) client.readObject());
+                    productService.createNewProduct((Product) client.readObject());
                     break;
                 }
                 case DELETE_PRODUCT: {
-                    productRepository.deleteProductById((Integer) client.readObject());
+                    productService.deleteProductById((Integer) client.readObject());
                     break;
                 }
                 case GET_ALL_COMPANY_PRODUCTS: {
-                    client.writeObject(productRepository.getProductsByCompanyId((Integer) client.readObject()));
+                    client.writeObject(productService.getAllCompanyProducts((Integer) client.readObject()));
                     break;
                 }
                 case UPDATE_PRODUCT: {
-                    productRepository.updateProduct((Product) client.readObject());
+                    productService.updateProduct((Product) client.readObject());
                     break;
                 }
                 case ADD_NEW_PRODUCTION: {
-                    productionRepository.addNewProduction((Production) client.readObject());
+                    productionService.createNewProduction((Production) client.readObject());
                     break;
                 }
                 case DELETE_PRODUCTION: {
-                    client.writeObject(productionRepository.deleteProductionById((Integer) client.readObject()));
+                    client.writeObject(productionService.deleteProductionById((Integer) client.readObject()));
                     break;
                 }
                 case GET_ALL_PRODUCT_PRODUCTIONS: {
-                    client.writeObject(productionRepository.getProductionsByProductId((Integer) client.readObject()));
+                    client.writeObject(productionService.getAllProductProductions((Integer) client.readObject()));
                     break;
                 }
                 case UPDATE_PRODUCTION: {
-                    client.writeObject(productionRepository.updateProduction((Production) client.readObject()));
+                    client.writeObject(productionService.updateProduction((Production) client.readObject()));
                     break;
                 }
                 case ADD_NEW_SALE: {
-                    client.writeObject(saleRepository.addNewSale((Sale) client.readObject()));
+                    client.writeObject(saleService.createNewSale((Sale) client.readObject()));
                     break;
                 }
                 case DELETE_SALE: {
-                    saleRepository.deleteSaleById((Integer) client.readObject());
+                    saleService.deleteSaleById((Integer) client.readObject());
                     break;
                 }
                 case GET_ALL_PRODUCT_SALES: {
-                    client.writeObject(saleRepository.getSalesByProductId((Integer) client.readObject()));
+                    client.writeObject(saleService.getAllProductSales((Integer) client.readObject()));
                     break;
                 }
                 case UPDATE_SALE: {
-                    client.writeObject(saleRepository.updateSale((Sale) client.readObject()));
+                    client.writeObject(saleService.updateSale((Sale) client.readObject()));
                     break;
                 }
-                case GET_ALL_USER_PRICE_CALCULATIONS:{
-                    client.writeObject(priceCalculationRepository.getCalculationsByUserId((Integer) client.readObject()));
+                case GET_ALL_USER_PRICE_CALCULATIONS: {
+                    client.writeObject(priceCalculationService.getAllUserPriceCalculations((Integer) client.readObject()));
                     break;
                 }
                 case ADD_NEW_PRICE_CALCULATION: {
-                    client.writeObject(priceCalculationRepository.addNewCalculation((PriceCalculation) client.readObject()));
+                    client.writeObject(priceCalculationService.createNewCalculation((PriceCalculation) client.readObject()));
                     break;
                 }
-                case DELETE_ALL_USER_PRICE_CALCULATIONS:{
-                    priceCalculationRepository.deleteAllCalculationsByUserId((Integer) client.readObject());
+                case DELETE_ALL_USER_PRICE_CALCULATIONS: {
+                    priceCalculationService.deleteAllUserPriceCalculations((Integer) client.readObject());
                     break;
                 }
-                case GET_ALL_USER_COST_CALCULATIONS:{
-                    client.writeObject(costCalculationRepository.getCalculationsByUserId((Integer) client.readObject()));
+                case GET_ALL_USER_COST_CALCULATIONS: {
+                    client.writeObject(costCalculationService.getAllUserCostCalculations((Integer) client.readObject()));
                     break;
                 }
                 case ADD_NEW_COST_CALCULATION: {
-                    client.writeObject(costCalculationRepository.addNewCalculation((CostCalculation) client.readObject()));
+                    client.writeObject(costCalculationService.createNewCalculation((CostCalculation) client.readObject()));
                     break;
                 }
-                case DELETE_ALL_USER_COST_CALCULATIONS:{
-                    costCalculationRepository.deleteAllCalculationsByUserId((Integer) client.readObject());
+                case DELETE_ALL_USER_COST_CALCULATIONS: {
+                    costCalculationService.deleteAllUserCostCalculations((Integer) client.readObject());
                     break;
                 }
             }

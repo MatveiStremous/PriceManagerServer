@@ -1,9 +1,6 @@
 package com.example.pricemanager.repo;
 
-import com.example.pricemanager.entity.Company;
 import com.example.pricemanager.entity.Product;
-import com.example.pricemanager.entity.Production;
-import com.example.pricemanager.entity.Sale;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,10 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductRepository implements Repository {
-    private static final CompanyRepository companyRepository = new CompanyRepository();
-    private static final ProductionRepository productionRepository = new ProductionRepository();
-    private static final SaleRepository saleRepository = new SaleRepository();
-
     public void addNewProduct(Product product) {
         String sqlRequest = "INSERT INTO product (name, company_id) " +
                 "VALUES(?, ?)";
@@ -28,9 +21,6 @@ public class ProductRepository implements Repository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        Company company = companyRepository.getCompanyById(product.getCompanyId());
-        companyRepository.updateAmountOfCompanyProducts(company.getId(), company.getAmountOfProducts() + 1);
     }
 
     public Product getProductById(int id) {
@@ -81,10 +71,6 @@ public class ProductRepository implements Repository {
     }
 
     public void deleteProductById(int id) {
-        Product product = getProductById(id);
-        Company company = companyRepository.getCompanyById(product.getCompanyId());
-        companyRepository.updateAmountOfCompanyProducts(company.getId(), company.getAmountOfProducts() - 1);
-
         String sql = "DELETE FROM product " +
                 "WHERE product_id = " + id;
         try {
@@ -115,33 +101,5 @@ public class ProductRepository implements Repository {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public float calcAverageCostByProductId(int product_id) {
-        List<Production> productions = productionRepository.getProductionsByProductId(product_id);
-        float sum = 0;
-        int amount = 0;
-        for(int i = 0; i<productions.size();i++){
-            sum+=productions.get(i).getTotalCosts();
-            amount+=productions.get(i).getAmount();
-        }
-        if(amount == 0){
-            return 0;
-        }
-        return sum/amount;
-    }
-
-    public float calcAverageSellingPriceByProductId(int product_id){
-        List<Sale> sales = saleRepository.getSalesByProductId(product_id);
-        float sum = 0;
-        int amount = 0;
-        for(int i = 0; i<sales.size();i++){
-            sum+=sales.get(i).getTotalPrice();
-            amount+=sales.get(i).getAmount();
-        }
-        if(amount == 0){
-            return 0;
-        }
-        return sum/amount;
     }
 }

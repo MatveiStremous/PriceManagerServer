@@ -10,23 +10,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PriceCalculationRepository implements Repository {
-    public double addNewCalculation(PriceCalculation priceCalculation) {
+    public void addNewCalculation(PriceCalculation priceCalculation) {
         String sqlRequest = "INSERT INTO price_calculation (average_cost, increase_perc, tax_perc, result, user_id) " +
                 "VALUES(?, ?, ?, ?, ?)";
-        double result = priceCalculation.getAverageCost() * (priceCalculation.getTaxPerc() / 100 + 1) * (priceCalculation.getIncreasePerc() / 100 + 1);
         try {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setDouble(1, priceCalculation.getAverageCost());
             statement.setFloat(2, priceCalculation.getIncreasePerc());
             statement.setFloat(3, priceCalculation.getTaxPerc());
-            statement.setDouble(4, result);
+            statement.setDouble(4, priceCalculation.getResult());
             statement.setInt(5, priceCalculation.getUserId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return result;
     }
 
     public List<PriceCalculation> getCalculationsByUserId(int userId) {
@@ -54,9 +52,9 @@ public class PriceCalculationRepository implements Repository {
         return calculations;
     }
 
-    public void deleteAllCalculationsByUserId(int user_id) {
+    public void deleteAllCalculationsByUserId(int userId) {
         String sql = "DELETE FROM price_calculation " +
-                "WHERE user_id = " + user_id;
+                "WHERE user_id = " + userId;
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sql);

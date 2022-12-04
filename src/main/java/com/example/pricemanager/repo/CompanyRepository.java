@@ -129,20 +129,4 @@ public class CompanyRepository implements Repository {
         }
         return false;
     }
-
-    public void updateAmountOfCompanyProducts(int company_id, int amount) {
-        String sqlRequest = "UPDATE company SET" +
-                " amount_of_products = ?" +
-                " WHERE company_id = ?";
-
-        try {
-            PreparedStatement statement = connection.prepareStatement(sqlRequest);
-            statement.setInt(1, amount);
-            statement.setInt(2, company_id);
-
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }
