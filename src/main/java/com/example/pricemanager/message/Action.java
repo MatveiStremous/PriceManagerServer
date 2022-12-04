@@ -3,7 +3,7 @@ package com.example.pricemanager.message;
 public enum Action {
     LOGIN,
     REGISTRATION,
-    CHECK_ROLE,
+    GET_USER_INFO,
     EXIT,
     ADD_NEW_COMPANY,
     GET_ALL_USER_COMPANIES,

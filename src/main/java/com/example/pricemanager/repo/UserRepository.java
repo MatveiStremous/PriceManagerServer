@@ -1,10 +1,6 @@
 package com.example.pricemanager.repo;
 
 import com.example.pricemanager.entity.User;
-import com.google.common.hash.HashCode;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
-import org.apache.commons.io.Charsets;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,16 +9,17 @@ import java.sql.Statement;
 
 
 public class UserRepository implements Repository {
-    public boolean addNewUser(User user) {
+    public static boolean addNewUser(User user) {
         if (getUserByLogin(user.getLogin()) == null) {
-            String sqlRequest = "INSERT INTO user (login, password, role) " +
-                    "VALUES(?, ?, ?)";
+            String sqlRequest = "INSERT INTO user (login, password, role, status) " +
+                    "VALUES(?, ?, ?, ?)";
 
             try {
                 PreparedStatement statement = connection.prepareStatement(sqlRequest);
                 statement.setString(1, user.getLogin());
-                statement.setString(2, UserRepository.getHashOfPassword(user.getPassword()));
+                statement.setString(2, user.getPassword());
                 statement.setString(3, String.valueOf(user.getUserRole()));
+                statement.setString(4, String.valueOf(user.getUserStatus()));
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -33,27 +30,7 @@ public class UserRepository implements Repository {
         }
     }
 
-    public int loginUser(User user) {
-        User userFromDb = getUserByLogin(user.getLogin());
-        if(userFromDb == null || !UserRepository.getHashOfPassword(user.getPassword()).equals(userFromDb.getPassword())){
-            return 0;
-        }
-        return userFromDb.getId();
-    }
-
-    public static String getHashOfPassword(String password) {
-        Hasher hasher = Hashing.sha256().newHasher();
-        hasher.putString(password, Charsets.UTF_8);
-        HashCode sha256 = hasher.hash();
-
-        return sha256.toString();
-    }
-
-    public User.UserRole getUserRoleByLogin(String login) {
-        return getUserByLogin(login).getUserRole();
-    }
-
-    public User getUserByLogin(String login) {
+    public static User getUserByLogin(String login) {
         try {
             Statement statement = connection.createStatement();
             String sql = "SELECT * FROM user " +
@@ -69,6 +46,12 @@ public class UserRepository implements Repository {
                     userFromDb.setUserRole(User.UserRole.ADMIN_ROLE);
                 } else {
                     userFromDb.setUserRole(User.UserRole.USER_ROLE);
+                }
+                String status = rs.getString("status");
+                if (status.equals("ACTIVE")) {
+                    userFromDb.setUserStatus(User.UserStatus.ACTIVE);
+                } else {
+                    userFromDb.setUserStatus(User.UserStatus.BANNED);
                 }
                 return userFromDb;
             }

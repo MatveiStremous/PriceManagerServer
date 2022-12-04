@@ -5,6 +5,7 @@ import com.example.pricemanager.entity.*;
 import com.example.pricemanager.message.Action;
 import com.example.pricemanager.message.Status;
 import com.example.pricemanager.repo.*;
+import com.example.pricemanager.service.UserService;
 
 import java.net.Socket;
 
@@ -28,15 +29,11 @@ public class ClientHandler implements Runnable {
             Action action = (Action) client.readObject();
             switch (action) {
                 case LOGIN: {
-                    int id = userRepository.loginUser((User) client.readObject());
-                    client.writeObject(id > 0 ? Status.SUCCESS : Status.INVALID_PASSWORD);
-                    if (id > 0) {
-                        client.writeObject(id);
-                    }
+                    client.writeObject(UserService.loginUser((User) client.readObject()));
                     break;
                 }
-                case CHECK_ROLE: {
-                    client.writeObject(userRepository.getUserRoleByLogin((String) client.readObject()));
+                case GET_USER_INFO:{
+                    client.writeObject(UserService.getUserInfoByInfo((String) client.readObject()));
                     break;
                 }
                 case REGISTRATION: {

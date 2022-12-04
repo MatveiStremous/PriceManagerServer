@@ -7,17 +7,24 @@ public class User implements Serializable {
     private String login;
     private String password;
     private UserRole userRole = UserRole.USER_ROLE;
+    private UserStatus userStatus = UserStatus.ACTIVE;
 
     public enum UserRole {
         USER_ROLE,
         ADMIN_ROLE
     }
 
-    public User(int id, String login, String password, UserRole userRole) {
+    public enum UserStatus {
+        ACTIVE,
+        BANNED
+    }
+
+    public User(int id, String login, String password, UserRole userRole, UserStatus userStatus) {
         this.id = id;
         this.login = login;
         this.password = password;
         this.userRole = userRole;
+        this.userStatus = userStatus;
     }
 
     public User(String login, String password) {
@@ -25,10 +32,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public User(String login, String password, UserRole userRole) {
+    public User(String login, String password, UserRole userRole, UserStatus userStatus) {
         this.login = login;
         this.password = password;
         this.userRole = userRole;
+        this.userStatus = userStatus;
     }
 
     public User() {
@@ -64,6 +72,14 @@ public class User implements Serializable {
 
     public void setUserRole(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public UserStatus getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 }
 
