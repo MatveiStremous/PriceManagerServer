@@ -1,9 +1,10 @@
 package com.example.pricemanager.controller;
 
 import com.example.pricemanager.connection.Client;
+import com.example.pricemanager.dto.ChangePasswordDto;
+import com.example.pricemanager.dto.UserDto;
 import com.example.pricemanager.entity.*;
 import com.example.pricemanager.message.Action;
-import com.example.pricemanager.repo.CostCalculationRepository;
 import com.example.pricemanager.service.*;
 
 import java.net.Socket;
@@ -40,7 +41,7 @@ public class ClientHandler implements Runnable {
                     break;
                 }
                 case GET_USER_INFO: {
-                    client.writeObject(userService.getUserInfoByInfo((String) client.readObject()));
+                    client.writeObject(userService.getUserInfoByLogin((String) client.readObject()));
                     break;
                 }
                 case REGISTRATION: {
@@ -138,6 +139,18 @@ public class ClientHandler implements Runnable {
                 }
                 case DELETE_ALL_USER_COST_CALCULATIONS: {
                     costCalculationService.deleteAllUserCostCalculations((Integer) client.readObject());
+                    break;
+                }
+                case CHANGE_PASSWORD:{
+                    client.writeObject(userService.changeUserPassword((ChangePasswordDto)client.readObject()));
+                    break;
+                }
+                case GET_ALL_USERS:{
+                    client.writeObject(userService.getAllUserDtos());
+                    break;
+                }
+                case UPDATE_USER:{
+                    client.writeObject(userService.updateUser((UserDto) client.readObject()));
                     break;
                 }
             }
