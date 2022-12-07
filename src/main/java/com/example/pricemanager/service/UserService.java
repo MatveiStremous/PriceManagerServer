@@ -76,7 +76,7 @@ public class UserService {
         return Status.SUCCESS;
     }
 
-    private String getHashOfPassword(String password) {
+    public String getHashOfPassword(String password) {
         Hasher hasher = Hashing.sha256().newHasher();
         hasher.putString(password, Charsets.UTF_8);
         HashCode sha256 = hasher.hash();
