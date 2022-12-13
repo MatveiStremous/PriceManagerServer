@@ -1,5 +1,6 @@
 package com.example.pricemanager.service;
 
+import com.example.pricemanager.dto.ChartDto;
 import com.example.pricemanager.entity.Company;
 import com.example.pricemanager.entity.Product;
 import com.example.pricemanager.entity.Sale;
@@ -8,6 +9,8 @@ import com.example.pricemanager.repo.CompanyRepository;
 import com.example.pricemanager.repo.ProductRepository;
 import com.example.pricemanager.repo.SaleRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SaleService {
@@ -87,10 +90,37 @@ public class SaleService {
         if (amount == 0) {
             return 0;
         }
-        return sum / amount;
+        return Math.round(sum * 100 / amount) / 100.0f;
     }
 
     public List<Sale> getAllProductSales(int productId) {
         return saleRepository.getSalesByProductId(productId);
+    }
+
+    public List<ChartDto> getInfoForPriceChart(int productId) {
+        List<ChartDto> data = new ArrayList<>();
+        List<Sale> sales = saleRepository.getSalesByProductId(productId);
+        Collections.sort(sales);
+        int amount = 0;
+        double sum = 0;
+        for (int i = 0; i < sales.size(); i += 1) {
+            ChartDto chartDto = new ChartDto();
+            Sale sale = sales.get(i);
+            amount = sale.getAmount();
+            sum = sale.getTotalPrice();
+            if (i + 1 < sales.size()) {
+                while (i + 1 < sales.size()) {
+                    if (sales.get(i + 1).getDate().isEqual(sale.getDate())) {
+                        amount += sales.get(i + 1).getAmount();
+                        sum += sales.get(i + 1).getTotalPrice();
+                        i += 1;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            data.add(new ChartDto(Math.round(sum*100/amount)/100.0, sale.getDate()));
+        }
+        return data;
     }
 }

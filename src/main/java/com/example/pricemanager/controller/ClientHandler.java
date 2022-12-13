@@ -153,6 +153,14 @@ public class ClientHandler implements Runnable {
                     client.writeObject(userService.updateUser((UserDto) client.readObject()));
                     break;
                 }
+                case GET_DATA_FOR_PRICE_CHART:{
+                    client.writeObject(saleService.getInfoForPriceChart((Integer) client.readObject()));
+                    break;
+                }
+                case GET_DATA_FOR_COST_CHART:{
+                    client.writeObject(productionService.getInfoForCostChart((Integer) client.readObject()));
+                    break;
+                }
             }
         }
     }

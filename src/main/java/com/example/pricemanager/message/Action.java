@@ -30,5 +30,7 @@ public enum Action {
     CHANGE_PASSWORD,
     GET_ALL_USERS,
     UPDATE_USER,
+    GET_DATA_FOR_PRICE_CHART,
+    GET_DATA_FOR_COST_CHART
 }
 

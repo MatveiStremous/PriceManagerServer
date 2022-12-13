@@ -3,7 +3,7 @@ package com.example.pricemanager.entity;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Sale implements Serializable {
+public class Sale implements Serializable, Comparable<Sale> {
     private int id;
     private int amount;
     private double totalPrice;
@@ -66,5 +66,16 @@ public class Sale implements Serializable {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    @Override
+    public int compareTo(Sale sale) {
+        if (sale.getDate().isEqual(date)) {
+            return 0;
+        }
+        if (sale.getDate().isAfter(date)) {
+            return -1;
+        }
+        return 1;
     }
 }

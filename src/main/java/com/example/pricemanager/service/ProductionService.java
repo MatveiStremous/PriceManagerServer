@@ -1,13 +1,17 @@
 package com.example.pricemanager.service;
 
+import com.example.pricemanager.dto.ChartDto;
 import com.example.pricemanager.entity.Company;
 import com.example.pricemanager.entity.Product;
 import com.example.pricemanager.entity.Production;
+import com.example.pricemanager.entity.Sale;
 import com.example.pricemanager.message.Status;
 import com.example.pricemanager.repo.CompanyRepository;
 import com.example.pricemanager.repo.ProductRepository;
 import com.example.pricemanager.repo.ProductionRepository;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ProductionService {
@@ -87,10 +91,37 @@ public class ProductionService {
         if (amount == 0) {
             return 0;
         }
-        return sum / amount;
+        return Math.round(sum*100 / amount)/100.0f;
     }
 
     public List<Production> getAllProductProductions(int product_id) {
         return productionRepository.getProductionsByProductId(product_id);
+    }
+
+    public List<ChartDto> getInfoForCostChart(int productId) {
+        List<ChartDto> data = new ArrayList<>();
+        List<Production> productions = productionRepository.getProductionsByProductId(productId);
+        Collections.sort(productions);
+        int amount = 0;
+        double sum = 0;
+        for (int i = 0; i < productions.size(); i += 1) {
+            ChartDto chartDto = new ChartDto();
+            Production production = productions.get(i);
+            amount = production.getAmount();
+            sum = production.getTotalCosts();
+            if (i + 1 < productions.size()) {
+                while (i + 1 < productions.size()) {
+                    if (productions.get(i + 1).getDate().isEqual(production.getDate())) {
+                        amount += productions.get(i + 1).getAmount();
+                        sum += productions.get(i + 1).getTotalCosts();
+                        i += 1;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            data.add(new ChartDto(Math.round(sum*100/amount)/100.0, production.getDate()));
+        }
+        return data;
     }
 }
