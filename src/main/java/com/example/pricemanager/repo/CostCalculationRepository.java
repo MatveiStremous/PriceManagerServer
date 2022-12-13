@@ -11,8 +11,8 @@ import java.util.List;
 
 public class CostCalculationRepository implements Repository {
     public void addNewCalculation(CostCalculation costCalculation) {
-        String sqlRequest = "INSERT INTO cost_calculation (materials, production, deprecation, salary, others, result, user_id) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)";
+        String sqlRequest = "INSERT INTO cost_calculation (materials, production, deprecation, salary, others,user_id) " +
+                "VALUES(?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setDouble(1, costCalculation.getMaterials());
@@ -20,8 +20,7 @@ public class CostCalculationRepository implements Repository {
             statement.setDouble(3, costCalculation.getDeprecation());
             statement.setDouble(4, costCalculation.getSalary());
             statement.setDouble(5, costCalculation.getOthers());
-            statement.setDouble(6, costCalculation.getResult());
-            statement.setInt(7, costCalculation.getUserId());
+            statement.setInt(6, costCalculation.getUserId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -45,7 +44,6 @@ public class CostCalculationRepository implements Repository {
                 costCalculationFromDb.setSalary(rs.getDouble("salary"));
                 costCalculationFromDb.setOthers(rs.getDouble("others"));
                 costCalculationFromDb.setUserId(rs.getInt("user_id"));
-                costCalculationFromDb.setResult(rs.getDouble("result"));
 
                 calculations.add(costCalculationFromDb);
             }

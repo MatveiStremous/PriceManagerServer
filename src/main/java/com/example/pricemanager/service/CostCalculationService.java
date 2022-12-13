@@ -13,7 +13,7 @@ public class CostCalculationService {
     }
 
     public double createNewCalculation(CostCalculation costCalculation) {
-        double result = costCalculation.getMaterials() + costCalculation.getDeprecation() + costCalculation.getProduction() + costCalculation.getSalary() + costCalculation.getOthers();
+        double result = calculateResult(costCalculation);
         costCalculation.setResult(result);
         costCalculationRepository.addNewCalculation(costCalculation);
         return result;
@@ -24,6 +24,18 @@ public class CostCalculationService {
     }
 
     public List<CostCalculation> getAllUserCostCalculations(int userId) {
-        return costCalculationRepository.getCalculationsByUserId(userId);
+        List<CostCalculation> costCalculations = costCalculationRepository.getCalculationsByUserId(userId);
+        double result = 0;
+        for (int i = 0; i < costCalculations.size(); i += 1) {
+            result = calculateResult(costCalculations.get(i));
+            costCalculations.get(i).setResult(result);
+        }
+        return costCalculations;
+    }
+
+    private double calculateResult(CostCalculation costCalculation) {
+        double result = costCalculation.getMaterials() + costCalculation.getDeprecation() +
+                costCalculation.getProduction() + costCalculation.getSalary() + costCalculation.getOthers();
+        return Math.round(result * 100) / 100.0;
     }
 }

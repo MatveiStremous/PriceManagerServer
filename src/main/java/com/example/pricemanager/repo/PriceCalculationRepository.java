@@ -11,15 +11,14 @@ import java.util.List;
 
 public class PriceCalculationRepository implements Repository {
     public void addNewCalculation(PriceCalculation priceCalculation) {
-        String sqlRequest = "INSERT INTO price_calculation (average_cost, increase_perc, tax_perc, result, user_id) " +
-                "VALUES(?, ?, ?, ?, ?)";
+        String sqlRequest = "INSERT INTO price_calculation (average_cost, increase_perc, tax_perc, user_id) " +
+                "VALUES(?, ?, ?, ?)";
         try {
             PreparedStatement statement = connection.prepareStatement(sqlRequest);
             statement.setDouble(1, priceCalculation.getAverageCost());
             statement.setFloat(2, priceCalculation.getIncreasePerc());
             statement.setFloat(3, priceCalculation.getTaxPerc());
-            statement.setDouble(4, priceCalculation.getResult());
-            statement.setInt(5, priceCalculation.getUserId());
+            statement.setInt(4, priceCalculation.getUserId());
 
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -41,7 +40,6 @@ public class PriceCalculationRepository implements Repository {
                 priceCalculationFromDb.setIncreasePerc(rs.getFloat("increase_perc"));
                 priceCalculationFromDb.setUserId(rs.getInt("user_id"));
                 priceCalculationFromDb.setTaxPerc(rs.getFloat("tax_perc"));
-                priceCalculationFromDb.setResult(rs.getDouble("result"));
 
                 calculations.add(priceCalculationFromDb);
             }
