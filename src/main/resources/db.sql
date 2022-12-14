@@ -34,7 +34,6 @@ create table if not exists cost_calculation
     deprecation double null,
     salary      double null,
     others      double null,
-    result      double null,
     user_id     int    not null,
     constraint cost_calculation_user_user_id_fk
         foreign key (user_id) references user (user_id)
@@ -48,7 +47,6 @@ create table if not exists price_calculation
     average_cost  double not null,
     increase_perc float  not null,
     tax_perc      float  not null,
-    result        double not null,
     user_id       int    not null,
     constraint price_calculation_user_user_id_fk
         foreign key (user_id) references user (user_id)

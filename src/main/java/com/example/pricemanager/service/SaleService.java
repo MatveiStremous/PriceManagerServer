@@ -104,7 +104,6 @@ public class SaleService {
         int amount = 0;
         double sum = 0;
         for (int i = 0; i < sales.size(); i += 1) {
-            ChartDto chartDto = new ChartDto();
             Sale sale = sales.get(i);
             amount = sale.getAmount();
             sum = sale.getTotalPrice();
